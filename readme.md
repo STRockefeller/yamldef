@@ -1,6 +1,6 @@
 # YAML to Go Struct Converter
 
-![GitHub License](https://img.shields.io/github/license/STRockefeller/yamldef)![GitHub License](https://img.shields.io/github/languages/top/STRockefeller/yamldef)
+![GitHub License](https://img.shields.io/github/license/STRockefeller/yamldef)![GitHub Top Language](https://img.shields.io/github/languages/top/STRockefeller/yamldef)![GitHub Actions Status](https://img.shields.io/github/actions/workflow/status/STRockefeller/yamldef/super-linter.yml)[![Go Report Card](https://goreportcard.com/badge/github.com/STRockefeller/go-linq)](https://goreportcard.com/report/github.com/STRockefeller/yamldef)[![Coverage Status](https://coveralls.io/repos/github/STRockefeller/go-linq/badge.svg?branch=main)](https://coveralls.io/github/STRockefeller/yamldef?branch=main)
 
 This Go package, `yamldef`, provides a utility to convert YAML data into Go struct definitions. It aims to simplify the process of working with YAML data by generating Go struct definitions that can be used directly in Go programs for marshaling and unmarshaling YAML data.
 
