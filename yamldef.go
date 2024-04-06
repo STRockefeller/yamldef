@@ -6,8 +6,7 @@ import (
 	"sort"
 	"strings"
 
-	"golang.org/x/text/cases"
-	"golang.org/x/text/language"
+	"github.com/stoewer/go-strcase"
 	"gopkg.in/yaml.v3"
 )
 
@@ -45,7 +44,7 @@ func generateStruct(buf *bytes.Buffer, data interface{}, indent int) {
 		for _, k := range keys {
 			v := mapData[k]
 			fieldType := getType(v, indent+1)
-			fieldName := cases.Title(language.English).String(k)
+			fieldName := strcase.UpperCamelCase(k)
 			buf.WriteString(fmt.Sprintf("%s%s %s `yaml:\"%s\"`\n", indentStr, fieldName, fieldType, k))
 		}
 	}
