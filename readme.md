@@ -1,5 +1,7 @@
 # YAML to Go Struct Converter
 
+![GitHub License](https://img.shields.io/github/license/STRockefeller/yamldef)![GitHub License](https://img.shields.io/github/languages/top/STRockefeller/yamldef)
+
 This Go package, `yamldef`, provides a utility to convert YAML data into Go struct definitions. It aims to simplify the process of working with YAML data by generating Go struct definitions that can be used directly in Go programs for marshaling and unmarshaling YAML data.
 
 ## Features
