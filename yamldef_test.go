@@ -36,7 +36,7 @@ func (g *GeneratedStruct) UnmarshalYAML(unmarshal func(interface{}) error) error
 }
 `
 
-	structDef := yamlToStructDefinition(yml)
+	structDef := YamlToStructDefinition(yml)
 
 	if trimSpacesForEachLine(string(structDef)) != trimSpacesForEachLine(expected) {
 		t.Errorf("Generated struct definition does not match expected.\nExpected:\n%s\nGot:\n%s", trimSpacesForEachLine(expected), trimSpacesForEachLine(string(structDef)))
@@ -88,7 +88,7 @@ func (g *GeneratedStruct) UnmarshalYAML(unmarshal func(interface{}) error) error
 }
 `
 
-	structDef := yamlToStructDefinition(yml)
+	structDef := YamlToStructDefinition(yml)
 
 	if trimSpacesForEachLine(string(structDef)) != trimSpacesForEachLine(expected) {
 		t.Errorf("Generated struct definition does not match expected for complex case.\nExpected:\n%s\nGot:\n%s", trimSpacesForEachLine(expected), trimSpacesForEachLine(string(structDef)))

@@ -10,8 +10,8 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// yamlToStructDefinition converts yaml file to go struct definition
-func yamlToStructDefinition(yml []byte) []byte {
+// YamlToStructDefinition converts yaml file to go struct definition
+func YamlToStructDefinition(yml []byte) []byte {
 	var data interface{}
 	err := yaml.Unmarshal(yml, &data)
 	if err != nil {
