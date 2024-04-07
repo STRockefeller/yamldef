@@ -3,37 +3,59 @@ package yamldef
 import (
 	"bytes"
 	"fmt"
+	"os"
 	"sort"
 	"strings"
 
+	"github.com/dave/jennifer/jen"
 	"github.com/stoewer/go-strcase"
 	"gopkg.in/yaml.v3"
 )
 
-// YamlToStructDefinition converts yaml file to go struct definition
-func YamlToStructDefinition(yml []byte) []byte {
+func GenerateSourceCode(yml []byte, dirPath string, packageName string, structName string) error {
+	if _, err := os.Stat(dirPath); os.IsNotExist(err) {
+		err := os.MkdirAll(dirPath, os.ModePerm)
+		if err != nil {
+			return err
+		}
+	}
+	f := jen.NewFile(packageName)
+
 	var data interface{}
 	err := yaml.Unmarshal(yml, &data)
 	if err != nil {
-		fmt.Println(err)
-		return nil
+		return err
 	}
-	structDef := bytes.Buffer{}
-	structDef.WriteString("type GeneratedStruct struct {\n")
-	generateStruct(&structDef, data, 1)
-	structDef.WriteString("}\n\n")
 
-	// marshal and unmarshal functions
-	structDef.WriteString(`func (g GeneratedStruct) MarshalYAML() (interface{}, error) {
-	return yaml.Marshal(g)
-}
+	if dataMap, ok := data.(map[string]interface{}); ok {
+		structFields := make([]jen.Code, 0)
+		keys := sortMapKeys(dataMap)
+		for _, key := range keys {
+			value := dataMap[key]
+			fieldType := getType(value, 1)
+			fieldName := strcase.UpperCamelCase(key)
+			structFields = append(structFields, jen.Id(fieldName).Id(fieldType).Tag(map[string]string{"yaml": key}))
+		}
+		f.Type().Id(structName).Struct(structFields...)
+	}
 
-func (g *GeneratedStruct) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	return unmarshal(g)
-}
-`)
+	// Add MarshalYAML method
+	f.Func().Params(jen.Id("g").Id(structName)).Id("MarshalYAML").Params().Params(jen.Interface(), jen.Error()).Block(
+		jen.Return(jen.Qual("gopkg.in/yaml.v3", "Marshal").Call(jen.Id("g"))),
+	)
 
-	return structDef.Bytes()
+	// Add UnmarshalYAML method
+	f.Func().Params(jen.Id("g").Op("*").Id(structName)).Id("UnmarshalYAML").Params(jen.Id("unmarshal").Func().Params(jen.Interface()).Error()).Error().Block(
+		jen.Return(jen.Id("unmarshal").Call(jen.Id("g"))),
+	)
+
+	outputFilePath := fmt.Sprintf("%s/%s.go", dirPath, strings.ToLower(structName))
+	fileContent := []byte(fmt.Sprintf("%#v", f))
+	if err := os.WriteFile(outputFilePath, fileContent, 0644); err != nil {
+		return err
+	}
+	fmt.Printf("Generated code successfully written to %s\n", outputFilePath)
+	return nil
 }
 
 // generateStruct 遞歸生成結構體的字段定義。
